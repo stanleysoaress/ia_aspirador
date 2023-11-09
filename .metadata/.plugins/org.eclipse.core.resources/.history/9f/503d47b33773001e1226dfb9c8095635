@@ -1,0 +1,142 @@
+package main;
+import java.util.HashMap;
+import java.util.Map;
+
+class AgenteAspirador {
+    private char posicao;
+    private Map<Character, Character> ambiente;
+    private int acoesRealizadas;
+
+    public AgenteAspirador() {
+        posicao = 'A';
+        ambiente = new HashMap<>();
+        acoesRealizadas = 0;
+
+        // Inicialize o ambiente
+        ambiente.put('A', 'S');
+        ambiente.put('B', ' ');
+        ambiente.put('C', 'S');
+        ambiente.put('D', ' ');
+        ambiente.put('E', ' ');
+        ambiente.put('F', 'S');
+        ambiente.put('G', ' ');
+        ambiente.put('H', ' ');
+        ambiente.put('I', 'S');
+        ambiente.put('J', ' ');
+        ambiente.put('K', 'S');
+        ambiente.put('L', 'S');
+        ambiente.put('M', ' ');
+        ambiente.put('N', 'S');
+        ambiente.put('O', ' ');
+        ambiente.put('P', 'S');
+    }
+
+    public char perceber() {
+        Character valor = ambiente.get(posicao);
+        if (valor != null) {
+            return valor.charValue();
+        } else {
+            return ' ';
+        }
+    }
+
+    public void acaoAspirar() {
+        if (perceber() == 'S') {
+            ambiente.put(posicao, ' ');
+            System.out.println("Aspirando sujeira em " + posicao);
+            acoesRealizadas++;
+        }
+    }
+
+    public void acaoMover(String direcao) {
+        char novaPosicao = calcularNovaPosicao(direcao);
+        if (ambiente.containsKey(novaPosicao)) {
+            posicao = novaPosicao;
+            System.out.println("Movendo-se para " + posicao);
+            acoesRealizadas++;
+        } else {
+            System.out.println("Movimento inválido para " + novaPosicao + ". Permanecendo na posição atual.");
+        }
+    }
+
+    private char calcularNovaPosicao(String direcao) {
+        char novaPosicao = posicao;
+        if (direcao.equals("cima") && posicao > 'D') {
+            novaPosicao -= 4;
+        } else if (direcao.equals("baixo") && posicao < 'L') {
+            novaPosicao += 4;
+        } else if (direcao.equals("esquerda") && posicao != 'A' && posicao != 'E' && posicao != 'I' && posicao != 'M' && posicao != 'L') {
+            novaPosicao--;
+        } else if (direcao.equals("direita") && posicao != 'D' && posicao != 'H' && posicao != 'L' && posicao != 'P') {
+            novaPosicao++;
+        }
+        return novaPosicao;
+    }
+
+
+    public void acaoVoltarParaCasa() {
+        while (posicao != 'A') {
+            acaoMover("cima");
+        }
+        System.out.println("De volta a casa (A)");
+    }
+
+    public void limparQuarto() {
+        while (ambiente.containsValue('S')) {
+            acaoAspirar();
+            if (ambiente.containsValue('S')) {
+                if (posicao == 'A') {
+                    acaoMover("direita");
+                } else if (posicao == 'B') {
+                    acaoMover("baixo");
+                } else if (posicao == 'C') {
+                    acaoMover("direita");
+                } else if (posicao == 'D') {
+                    acaoMover("baixo");
+                } else if (posicao == 'E') {
+                    acaoMover("cima");
+                } else if (posicao == 'F') {
+                    acaoMover("direita");
+                } else if (posicao == 'G') {
+                    acaoMover("baixo");
+                } else if (posicao == 'H') {
+                    acaoMover("esquerda");
+                } else if (posicao == 'I') {
+                    acaoMover("cima");
+                } else if (posicao == 'J') {
+                    acaoMover("esquerda");
+                } else if (posicao == 'K') {
+                    acaoMover("cima");
+                } else if (posicao == 'L') {
+                    acaoMover("direita");
+                } else if (posicao == 'M') {
+                    acaoMover("cima");
+                } else if (posicao == 'N') {
+                    acaoMover("esquerda");
+                } else if (posicao == 'O') {
+                    acaoMover("direita");
+                } else if (posicao == 'P') {
+                    acaoMover("baixo");
+                }
+            }
+        }
+        acaoVoltarParaCasa();
+    }
+
+    public boolean objetivoAlcancado() {
+        return !ambiente.containsValue('S');
+    }
+
+    public void executar() {
+        System.out.println("Iniciando a limpeza do quarto...");
+        limparQuarto();
+        System.out.println("Limpeza concluída em " + acoesRealizadas + " ações.");
+        if (objetivoAlcancado()) {
+            System.out.println("O quarto está limpo.");
+        } else {
+            System.out.println("O agente não conseguiu limpar todo o quarto.");
+        }
+    }
+
+
+}

@@ -1,0 +1,7 @@
+package main;
+
+public static void main(String[] args) {
+    AgenteAspirador agente = new AgenteAspirador();
+    agente.executar();
+}
+}
